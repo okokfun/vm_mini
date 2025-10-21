@@ -9,12 +9,12 @@ https://imgur.com/a/50MBxly
 &ensp;&ensp; 我不确定这个主题是否应该属于“项目”部分，但 6 位电压表是边缘电压表，也许在 DIY 项目时更多，所以我在这里输入了它。当然，Mod 有权将其转移到其他地方。
 
 &ensp;&ensp; 这是一个更少完成的项目。我将接受更多的吐槽和润色，但计划中没有进行重大返工。我决定让任何感兴趣的人都可以使用这个项目
-## Motivation
+## 动机
 It all started with my previous project [1]. It turned out to be quite chunky box, with a fair bit of circuitry for what it is doing - measuring single voltage input. Nonetheless, despite being one of a few finished long-scale voltmeter project, it served as testbed for further development and experiments. The enclosure is really closely packed with circuitry and I wondered if it can get any smaller. On a first glance it looked quite hard, but shortly I realised it can be done, with some added benefits. Except of the obvious form factor shrink, more efficient power supply could bring less self heating, with associated faster power-up stabilization. While shrink-down voltmeter could be worthy project on its own, I decided to make it harder by adding two features - switchable input ranges and resistance measurement.
 
 While tabletop multimeters with 6 and more digits are quite common from multiple of manufacturers, vast majority of handheld multimeters do have resolution up to 60000 counts (4 and 3/4 digits), with some going to 500000 counts (5 and 3/4 digits), while 6 digits multimeters being rare as hen's teeth (Gossen Metrawatt METRAHIT 30M being exception). This imbalance exists for a reason - different use case for handheld multimeters is one factor, harder environmental conditions making stable references difficult to build is definitely another one, not to mention somehow higher consumption of precision circuitry. My device isn't here to change this in any way. I'm aware of limitations of my device and I approached it as practical example of impractical design, since chase is better than the catch.
 
-## Implementation, design goals
+## 实施、设计目标
 I set a few goals in previous paragraph - 6 digit measurement (with reasonable linearity and noise), battery operation, switchable input ranges. This is one boundary condition, still leaving a lot of degrees of freedom. In order to move forward I needed to define mechanical factors. Despite having 3D printer in my home lab, I opted for off-the-shelf plastic enclosure, after a bit of searching I settled down on a quite cheap enclosure [2] with 6xAA battery holder and dimensions still acceptable to be called handheld. 
 
 Considering low cost, acceptable quality and good availability, another boundary condition was set. Designing handheld devices usually involves pingponging between mechanical and electrical design, this one was not an exception, so I had to return to electronics again.
@@ -36,12 +36,12 @@ I'd love to have at least digital domain galvanically separated from analog, but
 Enclosure dimensions and circuit blocks division gave ma another constraint, so I could finally get to schematics drawing and PCB design.
 
 Since I had clear idea what to do, this was relatively easy part and majority of work was done in two evenings. I opted for a bit of fun and joy (hobby projects are done for fun and joy, right?) and used minimelf 0207 resistors throughout both boards, even for some capacitors. Unfortunately decoupling capacitors are in more "boring" 0805 size format. Should there be anybody to trying to replicate my design - minimelf footprint can be populated by common and easy to solder 1206 resistor size, so you don't have to obtain not exactly common minimelf resistors.
-## Making it work
+## 让它发挥作用
 After PCBs were mostly populated, i discovered a few nasty layout bugs, forcing me to do quite a bit of rework and bodging. The bigger main PCB was mostly OK-ish, but analog board was half-functional even after excessive bodging. Voltmeter part was OK, but ohm current source had two ranges missing and 4-wire measurement plainly didn't work. I decided to respin the board to fix the bugs, after that I had more-less functional device, with working 4-wire resistance measurement, as well as working up to 10Mohm. Some more pictures and comments are in album [3].
 
 I realized I can have also diode test "for free", so expanded the functionality here, too.
 
-## Verification
+## 验证
 Since the ADC has input range +-10V (with cca 2V overrange), I focused first on JVO-2 testing on this particular range.
 - I measured INL using Time electroncis 2003S calibrator and HP-34401A being known for quite good linearity for 6,5 digit DMM. I wasn't able to get more than 1ppm nonlinearity, see attachment 02 below. Anyway, this is still a bit problematic, to properly cover the INL I need higher instrument class. At least I know my device isn't completely off.
 - I made quite a few measuremnts of shorted input jacks, testing for noise as per [4], fantastic resource. Fortunately there is really a lot of already measured commercial devices, so I have something to comapare against. At 10V range, for 1PLC, 10PLC and 100PLC I measured 0.69, 0.21 and 0.16ppm of RMS noise. For other ranges, see attachment 03 below. For comparison, I setup table capturing measured noise data of some other tabletop multimeters and my device, see attachment 04 and 05 below.
@@ -50,7 +50,7 @@ Since the ADC has input range +-10V (with cca 2V overrange), I focused first on 
 When changing power supply voltage from 10V down to 5.8V I can't detect any change of reading more than 1ppm. To achieve this wasn't as easy as it may sound - in my first trials I discovered quite strong (and non-linear) dependence of ADC reading on battery voltage, despite +-18V rails were perfectly stable. Aftera bit of head scratching I tracked down the reason to conducted EMI from main switching power supply influencing LM399A reference. Proper decoupling of reference with 100nF capacitors right at LM399 pins solved this problem.
 - Ohm ranges didn't get as much of treatment as voltage ones. Device was adjusted against my HP34401 on top of therange and checked with a few stable resistors I had on hand. From preliminary checks it looks like the reading correspond to each other within a few tens of ppm, but I don't call this proper test yet.
 
-## Résumé
+## 概述
 Now I got somehow weird combo of long-scale voltohmmeter in handheld enclosure, battery powered with hungry LM399A reference.
 
 I learned a few new things, compared to what I knew before this project.
@@ -61,16 +61,16 @@ I learned a few new things, compared to what I knew before this project.
 
 After all, it was really fun project and I don't regret time and money spent on it. All sources are available on github [5]. Link in [3] contains a lot of photos with some more comments to it.
 
-## Future work
+## 今后的工作
 - I should verify the ohm ranges
 - Autorange is still not implemented. I'm not even sure I want to implement it, though.
 - As the source code for MCU grew, I realized I have chosen bad firmware structure. 
 
 Rewriting it to omit repeated blocks of code would be good idea, but quite a bit of work.
-- Having two inputs (main input and 4W resistance sense) enables me to make ratio measurements. This is something to be examined later.
-- Having larger FPGA on board enables me to experiment with other modulation schemes than what I have now. This is very likely a thing I'm going to try.
+- 有两个输入（主输入和 4W 电阻检测）使我能够进行比率测量。这是稍后要研究的事情。
+- 搭载更大的FPGA使我能够尝试其他比现在更多的调制方案。这很可能是我将要尝试的一件事。
 
-## Links
+## 链接
 [1] - https://www.eevblog.com/forum/metrology/diy-6-5-digit-voltmeter/
 
 [2] - https://www.tme.eu/sk/katalog/?search=KM-103&s_field=1000011&s_order=desc
