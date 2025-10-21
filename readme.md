@@ -57,16 +57,16 @@ I learned a few new things, compared to what I knew before this project.
 - Low local heating (and thermal design in general) is important factor in precision circuits.
 - Having working ADC (as circuit on PCB) is far away from having voltmeter (as device in box) and this is heck a long way to multirange multimeter.
 - Despite what MELF stands for (Mostly End up Laying on the Floor) I haven't lost single MELF resistor.
-- LM399 is just really not suitable for battery operation.
+- LM399真的不适合电池工作。
 
-After all, it was really fun project and I don't regret time and money spent on it. All sources are available on github [5]. Link in [3] contains a lot of photos with some more comments to it.
+毕竟，这是一个非常有趣的项目，我并不后悔花在上面的时间和金钱。所有来源都可以在 github [5] 上找到。[3] 中的链接包含很多照片，并附有一些评论。
 
 ## 今后的工作
-- I should verify the ohm ranges
-- Autorange is still not implemented. I'm not even sure I want to implement it, though.
-- As the source code for MCU grew, I realized I have chosen bad firmware structure. 
+- 我应该验证欧姆量程
+- 自动范围仍未实现。不过，我什至不确定我是否要实现它。
+- 随着 MCU 源代码的增长，我意识到我选择了糟糕的固件结构。
 
-Rewriting it to omit repeated blocks of code would be good idea, but quite a bit of work.
+重写它以省略重复的代码块是个好主意，但工作量相当大。
 - 有两个输入（主输入和 4W 电阻检测）使我能够进行比率测量。这是稍后要研究的事情。
 - 搭载更大的FPGA使我能够尝试其他比现在更多的调制方案。这很可能是我将要尝试的一件事。
 
