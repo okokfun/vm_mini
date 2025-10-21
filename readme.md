@@ -15,17 +15,17 @@ It all started with my previous project [1]. It turned out to be quite chunky bo
 虽然具有 6 位及更多位数的台式万用表在多家制造商中很常见，但绝大多数手持式万用表的分辨率确实高达 60000 个计数（4 和 3/4 位），有些达到 500000 个计数（5 和 3/4 位），而 6 位万用表像母鸡的牙齿一样罕见（Gossen Metrawatt METRAHIT 30M 是例外）。这种不平衡的存在是有原因的，手持式万用表的不同用例是一个因素，更恶劣的环境条件使得稳定的基准难以构建肯定是另一个因素，更不用说精密电路的消耗更高了。我的设备不会以任何方式改变这一点。我意识到我的设备的局限性，我将其视为不切实际设计的实际例子，因为追逐胜于捕捉。
 
 ## 实施、设计目标
-I set a few goals in previous paragraph - 6 digit measurement (with reasonable linearity and noise), battery operation, switchable input ranges. This is one boundary condition, still leaving a lot of degrees of freedom. In order to move forward I needed to define mechanical factors. Despite having 3D printer in my home lab, I opted for off-the-shelf plastic enclosure, after a bit of searching I settled down on a quite cheap enclosure [2] with 6xAA battery holder and dimensions still acceptable to be called handheld. 
+我在前一段中设定了几个目标--6位数测量(具有合理的线性度和噪声)、电池工作、可切换输入范围。这是一个边界条件，仍然有很大的自由度。为了向前发展，我需要定义机械因素。尽管我家实验室里有3D打印机，但 我选择了现成的塑料外壳，经过一番搜索后，我选定了一个相当便宜的外壳[2]，电池座为6xAA，尺寸仍然可以称为手持设备。
 
-Considering low cost, acceptable quality and good availability, another boundary condition was set. Designing handheld devices usually involves pingponging between mechanical and electrical design, this one was not an exception, so I had to return to electronics again.
+考虑到成本低、质量可接受、可用性好，设定了另一个边界条件。设计手持设备通常涉及机械和电气设计之间的乒乓球，这次也不例外，所以我不得不再次回到电子领域。
 
-I set up those design goals:
-- Three voltage ranges: 1V, 10V and 100V full range, bipolar. 1V and 10V ranges should have switchable input resistance - 10M and >1GΩ. (in fact I was able to acheive 1M, 10M and >1GΩ)
-- Selectable integration time, at least 1, 10 and 100PLC
-- Five resistance ranges - 1k, 10k, 100k, 1M and 10M full range
-- Four wire resistance measurement
+我设定了这些设计目标:
+- 三个电压范围：1V、10V 和 100V 全量程、双极性。1V 和 10V 范围应具有可切换的输入电阻 10M 和 >1GΩ。（事实上我能够达到 1M、10M 和 >1GΩ）
+- 可选择集成时间，至少 1、10 和 100PLC
+- 5种电阻范围-1K、10K、100K、1M和10M全量程
+- 四线电阻测量
 
-I set up rough block diagram, see attachment 01 below. For ADC core I opted for design I already had [1], with some adjustments. EPM240 is CPLD that can host and ADC controller, but not much else. Since I wanted employ integration time switching as well as experimenting with other multislope modulation schemes, I decided to leave EPM240 for something more powerful (here it means jumping from 240 logic blocks to 1k and more). Lattice seems to have portfolio that fits my needs - hand-solderable package (QFN being tolerable, but QFP preferred), relatively low power operation and 1k+ LUTs. Mach XO2 fit the needs quite well, so the FPGA selection was done. In my previous project I used MSP430 to spice up my work, in this project I decided to use more familiar STM32L151. On user end of device is thin COG LCD with backlight, EA DOG132, since it had suitable dimensions and current consumption. For buttons I opted for Marquardt 6450 Series again, I just love those pushbuttons.
+我设置了一个粗略的框图，见下面的附件01。对于ADC核心，我选择了我已有的设计[1]，并做了一些调整。EPM240是一种可以主机和ADC控制器的CPLD，但没有太多其他功能。由于我想采用集成时间切换以及尝试其他多层调制方案， 我决定离开EPM240去换更强大的东西(这里指的是从240个逻辑块跳到1K甚至更多)。Lattice似乎有适合我需求的产品组合--可手工焊接封装(QFN还可以忍受， 但QFP优先)、相对较低的功耗和1K+LUTs.mach xO2非常适合需要，所以选择了FPGA。在我之前的项目中，我使用了MSP430来增加工作的趣味。 在这个项目中，我决定使用更熟悉的STM32L151。在设备的用户端是带背光的薄齿轮液晶显示器EA Dog132，因为它具有合适的尺寸和电流消耗。对于按钮，我再次选择了马夸特6450系列，我只是喜欢这些按钮。
 
 我以前的电压表部分是以“把厨房水槽扔到问题上”的方式设计的。我试图让我的脚更靠近地面。昂贵的 LT1116 比较器被 LM311 取代，同时仍然适用于此应用。积分器中的运算放大器是OPA140，电路的其余部分采用OPA192或OPA2192;OPA177A用于 LM399A 周围的参考电路。在参考源中使用 LM399A 是一个艰难的选择。对于电池供电的应用，像 LT1236 或 LTC6655 这样的东西会是我更明智的选择，但我决定在这里花哨一点，并使用加热参考，主要是因为它是设计挑战。
 
