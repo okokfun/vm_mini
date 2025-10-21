@@ -10,7 +10,7 @@ https://imgur.com/a/50MBxly
 
 &ensp;&ensp; 这是一个更少完成的项目。我将接受更多的吐槽和润色，但计划中没有进行重大返工。我决定让任何感兴趣的人都可以使用这个项目
 ## 动机
-It all started with my previous project [1]. It turned out to be quite chunky box, with a fair bit of circuitry for what it is doing - measuring single voltage input. Nonetheless, despite being one of a few finished long-scale voltmeter project, it served as testbed for further development and experiments. The enclosure is really closely packed with circuitry and I wondered if it can get any smaller. On a first glance it looked quite hard, but shortly I realised it can be done, with some added benefits. Except of the obvious form factor shrink, more efficient power supply could bring less self heating, with associated faster power-up stabilization. While shrink-down voltmeter could be worthy project on its own, I decided to make it harder by adding two features - switchable input ranges and resistance measurement.
+这一切都始于我之前的项目 [1]。事实证明，它是一个相当厚实的盒子，有相当多的电路用于测量单电压输入。尽管如此，尽管它是少数已完成的大型电压表项目之一，但它还是作为进一步开发和实验的测试平台。外壳的电路非常紧密，我想知道它是否可以变得更小。乍一看，它看起来很困难，但很快我意识到这是可以做到的，而且还有一些额外的好处。除了明显的外形尺寸缩小外，更高效的电源可以带来更少的自热，并具有更快的上电稳定性。虽然收缩电压表本身可能是一个值得的项目，但我决定通过添加两个功能来增加它：可切换输入范围和电阻测量。
 
 虽然具有 6 位及更多位数的台式万用表在多家制造商中很常见，但绝大多数手持式万用表的分辨率确实高达 60000 个计数（4 和 3/4 位），有些达到 500000 个计数（5 和 3/4 位），而 6 位万用表像母鸡的牙齿一样罕见（Gossen Metrawatt METRAHIT 30M 是例外）。这种不平衡的存在是有原因的，手持式万用表的不同用例是一个因素，更恶劣的环境条件使得稳定的基准难以构建肯定是另一个因素，更不用说精密电路的消耗更高了。我的设备不会以任何方式改变这一点。我意识到我的设备的局限性，我将其视为不切实际设计的实际例子，因为追逐胜于捕捉。
 
