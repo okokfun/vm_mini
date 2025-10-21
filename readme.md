@@ -27,36 +27,38 @@ I set up those design goals:
 
 I set up rough block diagram, see attachment 01 below. For ADC core I opted for design I already had [1], with some adjustments. EPM240 is CPLD that can host and ADC controller, but not much else. Since I wanted employ integration time switching as well as experimenting with other multislope modulation schemes, I decided to leave EPM240 for something more powerful (here it means jumping from 240 logic blocks to 1k and more). Lattice seems to have portfolio that fits my needs - hand-solderable package (QFN being tolerable, but QFP preferred), relatively low power operation and 1k+ LUTs. Mach XO2 fit the needs quite well, so the FPGA selection was done. In my previous project I used MSP430 to spice up my work, in this project I decided to use more familiar STM32L151. On user end of device is thin COG LCD with backlight, EA DOG132, since it had suitable dimensions and current consumption. For buttons I opted for Marquardt 6450 Series again, I just love those pushbuttons.
 
-My previous voltmeter was partially designed in "throw a kitchen sink at the problem" manner. I tried to get my feet more closer to ground. Expensive LT1116 comparator was replaced with LM311 while still being suitable for this application. Opamp in integrator is OPA140, the rest of circuit employs OPA192 or OPA2192; OPA177A are used in reference circuit around LM399A. Using LM399A in reference source was tough choice. For battery powered application something like LT1236 or LTC6655 would me more sensible choice, but I decided to go a bit fancy here and used heated reference - mainly because it's design challenge.
+我以前的电压表部分是以“把厨房水槽扔到问题上”的方式设计的。我试图让我的脚更靠近地面。昂贵的 LT1116 比较器被 LM311 取代，同时仍然适用于此应用。积分器中的运算放大器是OPA140，电路的其余部分采用OPA192或OPA2192;OPA177A用于 LM399A 周围的参考电路。在参考源中使用 LM399A 是一个艰难的选择。对于电池供电的应用，像 LT1236 或 LTC6655 这样的东西会是我更明智的选择，但我决定在这里花哨一点，并使用加热参考，主要是因为它是设计挑战。
 
-To achieve +-10V input range (actually +-12V for overrange) and high input impedance (order of GOhm and higher) isn't that trivial exercise. In my previous voltmeter I had high hopes for LTC2057, but it's significant current noise caused me a lot of trouble at higher input impedances. There are other autozero opamps, like LTC1052 with much better parameters, but low power supply range forced me to make bootstrapped power supply for it. This is starting to dictate power supply requirements. To achieve +-12V output swing on bootstrapped output, +-18V range was needed. 36V is maximal supply voltage for OPA192 and other opamps, so I decided to derive another power rail, -14V to power the opamps. This sets supply voltage to 32V, still being fine for analog portions of circuit as well as ADC. With projected current consumptio of roughly 20mA from both +-18V rails this asks for roughly 1W of output power to analog parts. After a bit of searching I opted for ADP5070 followed by ADP7142 and ADP7182 in a basic, more-less datasheet configuration. Power to the FPGA was delivered via 3,3V LDO with shutdown, MCU is always powered on via low power MCP1703 LDOs. Last power rail is 5V for powering relays and display backlight. When device is off, MCU is dormant with minimal current consumption, but can wake-up from pushbutton press and power up FPGA and analog portions of circuit; as well as power everything down when needed. Battery voltage is monitored with high resistance resistor divider (6,2/2,4M) followed by MCP6441 voltage follower to get nice low impedance output for ADC internal to MCU. There is isolated USB interface onboard, made around CP2102 interface IC and ADUM1202 isolator.
+要实现 +-10V 输入范围（实际上是 +-12V 的超量程）和高输入阻抗（GOhm 或更高）并不是一件容易的事。在我以前的电压表中，我对LTC2057寄予厚望，但它的显着电流噪声在较高的输入阻抗下给我带来了很多麻烦。还有其他自动归零运算放大器，例如参数更好的LTC1052，但电源范围低迫使我为它制作自举电源。这开始决定电源要求。为了在自举输出上实现+-12V输出摆幅，需要+-18V范围。36V 是 OPA192 和其他运算放大器的最大电源电压，因此我决定派生另一个电源轨 -14V 来为运算放大器供电。这将电源电压设置为 32V，对于电路的模拟部分和 ADC 仍然很好。由于两个 +-18V 电源轨的预计电流消耗约为 20mA，这需要模拟部件大约 1W 的输出功率。经过一番搜索，我选择了ADP5070，然后选择了基本的、更少的数据表配置中的ADP7142和ADP7182。FPGA 的电源通过 3,3V LDO 在关断的情况下提供，MCU 始终通过低功耗 MCP1703 LDO 通电。最后一个电源轨为 5V，用于为继电器和显示器背光供电。当器件关断时，MCU处于休眠状态，电流消耗最小，但可以通过按下按钮唤醒并启动电路的FPGA和模拟部分;以及在需要时关闭所有电源。电池电压通过高电阻分压器 （6,2/2,4M） 监控，然后使用电压跟随器监控MCP6441为 MCU 内部的 ADC 获得良好的低阻抗输出。板载隔离式USB接口，围绕CP2102接口IC和ADUM1202隔离器制成。
 
-I'd love to have at least digital domain galvanically separated from analog, but unfortunately I couldn't make power supply small and good enough, so I opted for power scheme described above. That also forced me to be more careful with grounding, decoupling and power planes placement. Going back to mechanical design I realized I can't fit everything on single PCB with dimensions given by enclosure size, so I opted for sandwich construction of two PCBs. Some circuit parts were fixed - for example user interface (display, keys) has to be on upper (main) PCB. Most logical choice would be to separate digital and analog parts on two PCBs, but I couldn't fit both analog frontend and ADC on single PCB, so I decided to have ADC on main PCB and leave analog frontend on smaller expansion PCB. 
+我希望至少将数字域与模拟电隔离，但不幸的是我无法使电源足够小且足够好，所以我选择了上述电源方案。这也迫使我在接地、去耦和电源平面放置方面更加小心。回到机械设计，我意识到我无法将所有东西都安装在单个 PCB 上，尺寸由外壳尺寸给出，所以我选择了两个 PCB 的夹层结构。一些电路部件是固定的，例如用户界面（显示器、按键）必须位于上部（主）PCB上。最合乎逻辑的选择是在两个 PCB 上分离数字和模拟部件，但我无法在单个 PCB 上同时安装模拟前端和 ADC，因此我决定在主 PCB 上安装 ADC，而将模拟前端留在较小的扩展 PCB 上。
 
-Enclosure dimensions and circuit blocks division gave ma another constraint, so I could finally get to schematics drawing and PCB design.
+外壳尺寸和电路块划分给了我另一个限制，所以我终于可以进行原理图绘制和 PCB 设计了。
 
-Since I had clear idea what to do, this was relatively easy part and majority of work was done in two evenings. I opted for a bit of fun and joy (hobby projects are done for fun and joy, right?) and used minimelf 0207 resistors throughout both boards, even for some capacitors. Unfortunately decoupling capacitors are in more "boring" 0805 size format. Should there be anybody to trying to replicate my design - minimelf footprint can be populated by common and easy to solder 1206 resistor size, so you don't have to obtain not exactly common minimelf resistors.
+由于我很清楚该做什么，所以这是相对容易的部分，大部分工作都在两个晚上完成。我选择了一些有趣和快乐(业余爱好项目是为了有趣和快乐而做的，对吗？)，并在两块电路板上使用了Minimelf 0207电阻，甚至在一些电容上也是如此。
+
+不幸的是，去耦电容采用了更“无聊”的0805尺寸格式。如果有人试图复制我的设计，最小基底面可以用普通且易于焊接的1206尺寸电阻填充，这样你就不必获得不完全普通的最小尺寸电阻。
 ## 让它发挥作用
-After PCBs were mostly populated, i discovered a few nasty layout bugs, forcing me to do quite a bit of rework and bodging. The bigger main PCB was mostly OK-ish, but analog board was half-functional even after excessive bodging. Voltmeter part was OK, but ohm current source had two ranges missing and 4-wire measurement plainly didn't work. I decided to respin the board to fix the bugs, after that I had more-less functional device, with working 4-wire resistance measurement, as well as working up to 10Mohm. Some more pictures and comments are in album [3].
+当PCB被大量填充后，我发现了一些令人讨厌的布局错误，迫使我进行了相当多的返工和调整。较大的主PCB基本上还可以，但模拟板即使在过度调整后也只能发挥一半作用。电压表部分没问题。 但欧姆电流源少了两个量程，4线测量显然无法正常工作。我决定重新使用电路板来修复缺陷，之后我有了更少功能的设备，可以进行4线电阻测量，并且可以工作到10兆欧。更多图片和评论见相册[3]。
 
-I realized I can have also diode test "for free", so expanded the functionality here, too.
+我意识到我也可以“免费”进行二极管测试，因此也在这里扩展了功能。
 
 ## 验证
-Since the ADC has input range +-10V (with cca 2V overrange), I focused first on JVO-2 testing on this particular range.
-- I measured INL using Time electroncis 2003S calibrator and HP-34401A being known for quite good linearity for 6,5 digit DMM. I wasn't able to get more than 1ppm nonlinearity, see attachment 02 below. Anyway, this is still a bit problematic, to properly cover the INL I need higher instrument class. At least I know my device isn't completely off.
-- I made quite a few measuremnts of shorted input jacks, testing for noise as per [4], fantastic resource. Fortunately there is really a lot of already measured commercial devices, so I have something to comapare against. At 10V range, for 1PLC, 10PLC and 100PLC I measured 0.69, 0.21 and 0.16ppm of RMS noise. For other ranges, see attachment 03 below. For comparison, I setup table capturing measured noise data of some other tabletop multimeters and my device, see attachment 04 and 05 below.
-- Since this is battery operated instrument, I was curious about startup behavior as well as stability as batteries are getting drained. After powerup, jumps roughly 15ppm high and falls down within ppm or two in roughly 10 minutes, typical startup behavior is captured in graph 06 below.
+由于ADC的输入范围为+-10V（cca 2V超量程），我首先关注该特定范围内的JVO-2测试。
+- 我使用Time Electroncis 2003S校准器和以线性度良好著称的HP-34401A测量了6,5位数DMM的INL。非线性度均未超过1ppm，见下文附件02。无论如何，这仍然有点问题，为了适当覆盖INL，我需要更高级别的仪器。至少我知道我的设备没有完全关闭。
+- 我对短路的输入插孔进行了相当多的测量，根据 [4] 测试噪声，这是很棒的资源。幸运的是，确实有很多已经测量的商业设备，所以我有一些东西可以对抗。在 10V 范围内，对于 1PLC、10PLC 和 100PLC，我测得的 RMS 噪声为 0.69、0.21 和 0.16ppm。有关其他范围，请参阅下面的附件 03。为了进行比较，我设置了表格捕获其他一些台式万用表和我的设备的测量噪声数据，请参阅下面的附件 04 和 05。
+- 由于这是电池供电的仪器，我对启动行为以及电池耗尽时的稳定性感到好奇。上电后，跳高约 15ppm，在大约 10 分钟内下降到一两 ppm 以内，典型的启动行为如下图 06 所示。
 
-When changing power supply voltage from 10V down to 5.8V I can't detect any change of reading more than 1ppm. To achieve this wasn't as easy as it may sound - in my first trials I discovered quite strong (and non-linear) dependence of ADC reading on battery voltage, despite +-18V rails were perfectly stable. Aftera bit of head scratching I tracked down the reason to conducted EMI from main switching power supply influencing LM399A reference. Proper decoupling of reference with 100nF capacitors right at LM399 pins solved this problem.
-- Ohm ranges didn't get as much of treatment as voltage ones. Device was adjusted against my HP34401 on top of therange and checked with a few stable resistors I had on hand. From preliminary checks it looks like the reading correspond to each other within a few tens of ppm, but I don't call this proper test yet.
+当电源电压从 10V 降低到 5.8V 时，我无法检测到任何超过 1ppm 的读数变化。要实现这一点并不像听起来那么容易，在我的第一次试验中，我发现 ADC 读数对电池电压的依赖性相当强（且非线性），尽管 +-18V 电源轨非常稳定。经过一番思考，我找到了主开关电源传导 EMI 影响 LM399A 参考的原因。在LM399引脚上用100nF电容器正确去耦基准电压源解决了这个问题。
+- 欧姆范围没有得到电压范围那么多的处理。根据我的HP34401调整了设备，并用我手头的一些稳定电阻器进行了检查。从初步检查来看，读数似乎在几十 ppm 内相互对应，但我还不称其为适当的测试。
 
 ## 概述
-Now I got somehow weird combo of long-scale voltohmmeter in handheld enclosure, battery powered with hungry LM399A reference.
+现在，我在手持式外壳中得到了某种奇怪的长尺度电压欧表组合，电池由饥饿的 LM399A 参考供电。
 
-I learned a few new things, compared to what I knew before this project.
-- Low local heating (and thermal design in general) is important factor in precision circuits.
-- Having working ADC (as circuit on PCB) is far away from having voltmeter (as device in box) and this is heck a long way to multirange multimeter.
-- Despite what MELF stands for (Mostly End up Laying on the Floor) I haven't lost single MELF resistor.
+与这个项目之前的知识相比，我学到了一些新东西。
+- 低局部加热(以及一般的热设计)是精密电路的重要因素。
+- 有工作的ADC(作为PCB上的电路)与有电压表(作为盒内器件)相去甚远，这与多量程万用表相比还有很长的路要走。
+- 不管MELF代表什么(大部分都是躺在地板上)，我并没有失去一个MELF电阻。
 - LM399真的不适合电池工作。
 
 毕竟，这是一个非常有趣的项目，我并不后悔花在上面的时间和金钱。所有来源都可以在 github [5] 上找到。[3] 中的链接包含很多照片，并附有一些评论。
