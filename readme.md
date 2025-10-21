@@ -35,3 +35,37 @@ Since I had clear idea what to do, this was relatively easy part and majority of
 After PCBs were mostly populated, i discovered a few nasty layout bugs, forcing me to do quite a bit of rework and bodging. The bigger main PCB was mostly OK-ish, but analog board was half-functional even after excessive bodging. Voltmeter part was OK, but ohm current source had two ranges missing and 4-wire measurement plainly didn't work. I decided to respin the board to fix the bugs, after that I had more-less functional device, with working 4-wire resistance measurement, as well as working up to 10Mohm. Some more pictures and comments are in album [3].
 
 I realized I can have also diode test "for free", so expanded the functionality here, too.
+
+## Verification
+Since the ADC has input range +-10V (with cca 2V overrange), I focused first on JVO-2 testing on this particular range.
+- I measured INL using Time electroncis 2003S calibrator and HP-34401A being known for quite good linearity for 6,5 digit DMM. I wasn't able to get more than 1ppm nonlinearity, see attachment 02 below. Anyway, this is still a bit problematic, to properly cover the INL I need higher instrument class. At least I know my device isn't completely off.
+- I made quite a few measuremnts of shorted input jacks, testing for noise as per [4], fantastic resource. Fortunately there is really a lot of already measured commercial devices, so I have something to comapare against. At 10V range, for 1PLC, 10PLC and 100PLC I measured 0.69, 0.21 and 0.16ppm of RMS noise. For other ranges, see attachment 03 below. For comparison, I setup table capturing measured noise data of some other tabletop multimeters and my device, see attachment 04 and 05 below.
+- Since this is battery operated instrument, I was curious about startup behavior as well as stability as batteries are getting drained. After powerup, jumps roughly 15ppm high and falls down within ppm or two in roughly 10 minutes, typical startup behavior is captured in graph 06 below.
+
+When changing power supply voltage from 10V down to 5.8V I can't detect any change of reading more than 1ppm. To achieve this wasn't as easy as it may sound - in my first trials I discovered quite strong (and non-linear) dependence of ADC reading on battery voltage, despite +-18V rails were perfectly stable. Aftera bit of head scratching I tracked down the reason to conducted EMI from main switching power supply influencing LM399A reference. Proper decoupling of reference with 100nF capacitors right at LM399 pins solved this problem.
+- Ohm ranges didn't get as much of treatment as voltage ones. Device was adjusted against my HP34401 on top of therange and checked with a few stable resistors I had on hand. From preliminary checks it looks like the reading correspond to each other within a few tens of ppm, but I don't call this proper test yet.
+
+## Résumé
+Now I got somehow weird combo of long-scale voltohmmeter in handheld enclosure, battery powered with hungry LM399A reference.
+
+I learned a few new things, compared to what I knew before this project.
+- Low local heating (and thermal design in general) is important factor in precision circuits.
+- Having working ADC (as circuit on PCB) is far away from having voltmeter (as device in box) and this is heck a long way to multirange multimeter.
+- Despite what MELF stands for (Mostly End up Laying on the Floor) I haven't lost single MELF resistor.
+- LM399 is just really not suitable for battery operation.
+
+After all, it was really fun project and I don't regret time and money spent on it. All sources are available on github [5]. Link in [3] contains a lot of photos with some more comments to it.
+
+## Future work
+- I should verify the ohm ranges
+- Autorange is still not implemented. I'm not even sure I want to implement it, though.
+- As the source code for MCU grew, I realized I have chosen bad firmware structure. Rewriting it to omit repeated blocks of code would be good idea, but quite a bit of work.
+- Having two inputs (main input and 4W resistance sense) enables me to make ratio measurements. This is something to be examined later.
+- Having larger FPGA on board enables me to experiment with other modulation schemes than what I have now. This is very likely a thing I'm going to try.
+
+## Links
+[1] - https://www.eevblog.com/forum/metrology/diy-6-5-digit-voltmeter/
+[2] - https://www.tme.eu/sk/katalog/?search=KM-103&s_field=1000011&s_order=desc
+[3] - https://imgur.com/a/50MBxly
+[4] - https://xdevs.com/article/dmm_noise/
+[5] - https://github.com/jaromir-sukuba/vm_mini
