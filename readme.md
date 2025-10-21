@@ -5,11 +5,6 @@ https://imgur.com/a/50MBxly
 
 
 # 下文是上面链接的翻译
-
-## Foreword
-&ensp;&ensp;I'm not sure whether this topic should belong to 'Projects' section, but 6 digit voltmeters is borderline voltnuttery thing, perhaps more when it's DIY project, so I entered it here. Mods have all the power to move it elsewhere, of course.
-
-This is more-less finished project. I will receive some more spit and polish, but major rework is not in the plans. I decided to make the project available for anybody intersted.
 ## 前言 
 &ensp;&ensp; 我不确定这个主题是否应该属于“项目”部分，但 6 位电压表是边缘电压表，也许在 DIY 项目时更多，所以我在这里输入了它。当然，Mod 有权将其转移到其他地方。 
 &ensp;&ensp; 这是一个更少完成的项目。我将接受更多的吐槽和润色，但计划中没有进行重大返工。我决定让任何感兴趣的人都可以使用这个项目
