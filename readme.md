@@ -19,6 +19,7 @@ While tabletop multimeters with 6 and more digits are quite common from multiple
 ## Implementation, design goals
 I set a few goals in previous paragraph - 6 digit measurement (with reasonable linearity and noise), battery operation, switchable input ranges. This is one boundary condition, still leaving a lot of degrees of freedom. In order to move forward I needed to define mechanical factors. Despite having 3D printer in my home lab, I opted for off-the-shelf plastic enclosure, after a bit of searching I settled down on a quite cheap enclosure [2] with 6xAA battery holder and dimensions still acceptable to be called handheld. 
 Considering low cost, acceptable quality and good availability, another boundary condition was set. Designing handheld devices usually involves pingponging between mechanical and electrical design, this one was not an exception, so I had to return to electronics again.
+
 I set up those design goals:
 - Three voltage ranges: 1V, 10V and 100V full range, bipolar. 1V and 10V ranges should have switchable input resistance - 10M and >1Gohm. (in fact I was able to acheive 1M, 10M and >1Gohm)
 - Selectable integration time, at least 1, 10 and 100PLC
