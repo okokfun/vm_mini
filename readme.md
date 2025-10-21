@@ -7,6 +7,7 @@ https://imgur.com/a/50MBxly
 # 下文是上面链接的翻译
 ## 前言 
 &ensp;&ensp; 我不确定这个主题是否应该属于“项目”部分，但 6 位电压表是边缘电压表，也许在 DIY 项目时更多，所以我在这里输入了它。当然，Mod 有权将其转移到其他地方。
+
 &ensp;&ensp; 这是一个更少完成的项目。我将接受更多的吐槽和润色，但计划中没有进行重大返工。我决定让任何感兴趣的人都可以使用这个项目
 ## Motivation
 It all started with my previous project [1]. It turned out to be quite chunky box, with a fair bit of circuitry for what it is doing - measuring single voltage input. Nonetheless, despite being one of a few finished long-scale voltmeter project, it served as testbed for further development and experiments. The enclosure is really closely packed with circuitry and I wondered if it can get any smaller. On a first glance it looked quite hard, but shortly I realised it can be done, with some added benefits. Except of the obvious form factor shrink, more efficient power supply could bring less self heating, with associated faster power-up stabilization. While shrink-down voltmeter could be worthy project on its own, I decided to make it harder by adding two features - switchable input ranges and resistance measurement.
