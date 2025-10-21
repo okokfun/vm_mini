@@ -65,7 +65,11 @@ After all, it was really fun project and I don't regret time and money spent on 
 
 ## Links
 [1] - https://www.eevblog.com/forum/metrology/diy-6-5-digit-voltmeter/
+
 [2] - https://www.tme.eu/sk/katalog/?search=KM-103&s_field=1000011&s_order=desc
+
 [3] - https://imgur.com/a/50MBxly
+
 [4] - https://xdevs.com/article/dmm_noise/
+
 [5] - https://github.com/jaromir-sukuba/vm_mini
