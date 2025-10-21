@@ -7,7 +7,7 @@ https://imgur.com/a/50MBxly
 # 下文是上面链接的翻译
 
 ## Foreword
-I'm not sure whether this topic should belong to 'Projects' section, but 6 digit voltmeters is borderline voltnuttery thing, perhaps more when it's DIY project, so I entered it here. Mods have all the power to move it elsewhere, of course.
+&ensp;&ensp;I'm not sure whether this topic should belong to 'Projects' section, but 6 digit voltmeters is borderline voltnuttery thing, perhaps more when it's DIY project, so I entered it here. Mods have all the power to move it elsewhere, of course.
 
 This is more-less finished project. I will receive some more spit and polish, but major rework is not in the plans. I decided to make the project available for anybody intersted.
 
