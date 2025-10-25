@@ -27,8 +27,7 @@ double it_array_rcf[10] = {1.000145,1.000060,1.000015,1.0,1.0,1.0,1.0};	//TODO
 
 
 
-int main(void)
-	{
+int main(void) {
     hw_init ();
     disp_init();
     sr_shift16(0x0 | SR_M11 | SR_M24 | SR_M22 | SR_K2 | SR_K1);
@@ -64,8 +63,7 @@ int main(void)
 //    on_state = RUN_STATE_SHDN;
 //    if (K_K1_R==0)
     	on_state = RUN_STATE_RUN;
-    while (1)
-	{
+    while (1) {
     if (on_state==RUN_STATE_SHDN)
     	{
     	turn_off();
