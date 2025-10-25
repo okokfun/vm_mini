@@ -64,30 +64,25 @@ int main(void) {
 //    if (K_K1_R==0)
     	on_state = RUN_STATE_RUN;
     while (1) {
-    if (on_state==RUN_STATE_SHDN)
-    	{
-    	turn_off();
-    	on_state = RUN_STATE_RUN_ENTRY;
-    	k1_cnt=0;
-    	D_BK_L;
+        if (on_state==RUN_STATE_SHDN) {
+            turn_off();
+    	        on_state = RUN_STATE_RUN_ENTRY;
+    	        k1_cnt=0;
+    	        D_BK_L;
     	}
-    if (on_state==RUN_STATE_RUN_ENTRY)
-    	{
-    	if (k1_cnt>5) NVIC_SystemReset();
-    	if (K_K1_R==1) on_state = RUN_STATE_SHDN;
+    if (on_state==RUN_STATE_RUN_ENTRY) {
+    	    if (k1_cnt>5) NVIC_SystemReset();
+    	    if (K_K1_R==1) on_state =                                RUN_STATE_SHDN;
     	}
-    if (on_state == RUN_STATE_RUN)
-    	{
-    	main_loop_content();
-        if (k1_cnt>5)
-        	{
-        	if (shift==1) on_state = 0;
+    if (on_state == RUN_STATE_RUN)	{
+        main_loop_content();
+        if (k1_cnt>5) {
+            if (shift==1) on_state = 0;
         	}
     	}
-    if (TIM7->SR)
-		{
-    	TIM7->SR = 0;
-    	if (on_state == RUN_STATE_RUN) bat_volt = get_bat_volt();
+    if (TIM7->SR) {
+    	    TIM7->SR = 0;
+    	    if (on_state == RUN_STATE_RUN)         bat_volt = get_bat_volt();
     	keys_new.CHAR = 0;
         if (K_K1_R==0)
         	{
