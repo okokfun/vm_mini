@@ -25,8 +25,6 @@ uint8_t it_array_mul[10]={1, 1, 1, 1, 2, 5, 10, 0};
 uint8_t it_array_raw[10]={1, 2, 5, 10, 10, 10, 10, 0};
 double it_array_rcf[10] = {1.000145,1.000060,1.000015,1.0,1.0,1.0,1.0};	//TODO
 
-
-
 int main(void) {
     hw_init ();
     disp_init();
